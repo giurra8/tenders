@@ -43,11 +43,8 @@ public class Offer {
     @Setter
     private OfferStatus status;
 
-    public Offer(@NonNull Bidder bidder, @NonNull Tender tender, @NonNull Cost estimatedCost, @NonNull LocalDate estimatedCompletionTime) {
-        this.bidder = bidder;
+    public Offer(@NonNull Tender tender) {
         this.tender = tender;
-        this.estimatedCost = estimatedCost;
-        this.estimatedCompletionTime = estimatedCompletionTime;
         this.status = OfferStatus.PENDING;
     }
 

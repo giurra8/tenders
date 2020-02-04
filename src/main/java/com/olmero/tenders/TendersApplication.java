@@ -2,7 +2,7 @@ package com.olmero.tenders;
 
 import com.olmero.tenders.model.company.Bidder;
 import com.olmero.tenders.model.company.Issuer;
-import com.olmero.tenders.model.common.Cost;
+import com.olmero.tenders.model.tender.Offer;
 import com.olmero.tenders.model.tender.Tender;
 import com.olmero.tenders.repository.OfferRepository;
 import com.olmero.tenders.repository.TenderRepository;
@@ -12,37 +12,51 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.Currency;
-
 @SpringBootApplication
 public class TendersApplication implements CommandLineRunner {
 
-    @Autowired
-    private TenderRepository tenderRepository;
+    private final TenderRepository tenderRepository;
 
-    @Autowired
-    private OfferRepository offerRepository;
+    private final OfferRepository offerRepository;
+
+    public TendersApplication(final TenderRepository tenderRepository, final OfferRepository offerRepository) {
+        this.tenderRepository = tenderRepository;
+        this.offerRepository = offerRepository;
+    }
 
     public static void main(String[] args) {
         SpringApplication.run(TendersApplication.class, args);
     }
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
 
-        Issuer firstIssuer = new Issuer("OG Issuer", Profession.INVESTOR);
+        Issuer firstIssuer = new Issuer("Spaces", Profession.INVESTOR);
         Issuer secondIssuer = new Issuer("FirstIssue LTD", Profession.INVESTOR);
 
-        Tender firstTender = new Tender(firstIssuer, new Cost(new BigDecimal(500000), Currency.getInstance("CHF")));
-        Tender secondTender = new Tender(secondIssuer, new Cost(new BigDecimal(1200000), Currency.getInstance("EUR")));
+        Tender firstTender = new Tender();
+        Tender secondTender = new Tender();
+        Tender thirdTender = new Tender();
 
         Bidder firstBidder = new Bidder("ProStruct GmbH", Profession.CONTRACTOR);
-        Bidder secondBidder = new Bidder("SSG Studio", Profession.CONTRACTOR);
+        Bidder secondBidder = new Bidder("SignStudio", Profession.CONTRACTOR);
+
+        Offer firstOffer = new Offer(firstTender);
+        Offer secondOffer = new Offer(secondTender);
+
+        firstTender.setIssuer(firstIssuer);
+        secondTender.setIssuer(secondIssuer);
+        thirdTender.setIssuer(secondIssuer);
+
+        firstOffer.setBidder(firstBidder);
+        secondOffer.setBidder(secondBidder);
 
         tenderRepository.save(firstTender);
         tenderRepository.save(secondTender);
+        tenderRepository.save(thirdTender);
+
+        offerRepository.save(firstOffer);
+        offerRepository.save(secondOffer);
 
     }
 }
