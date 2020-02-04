@@ -30,10 +30,6 @@ public class Tender {
 
     @Getter
     @Setter
-    private Cost cost;
-
-    @Getter
-    @Setter
     private LocalDate completionDate;
 
     @Getter
@@ -52,9 +48,7 @@ public class Tender {
     @Setter
     private List<Offer> offerList;
 
-    public Tender(@NonNull Issuer issuer, @NonNull Cost cost) {
-        this.issuer = issuer;
-        this.cost = cost;
+    public Tender() {
         this.status = TenderStatus.OPEN;
     }
 
