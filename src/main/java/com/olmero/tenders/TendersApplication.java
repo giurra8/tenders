@@ -9,11 +9,11 @@ import com.olmero.tenders.repository.IssuerRepository;
 import com.olmero.tenders.repository.OfferRepository;
 import com.olmero.tenders.repository.TenderRepository;
 import com.olmero.tenders.utils.Profession;
-import org.bson.types.ObjectId;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+// sample content initialized here
 @SpringBootApplication
 public class TendersApplication implements CommandLineRunner {
 
@@ -60,10 +60,6 @@ public class TendersApplication implements CommandLineRunner {
         secondOffer.setBidder(secondBidder);
         thirdOffer.setBidder(secondBidder);
         fourthOffer.setBidder(secondBidder);
-
-//        firstTender.getOfferList().add(firstOffer);
-//        firstTender.getOfferList().add(thirdOffer);
-//        secondTender.getOfferList().add(secondOffer);
 
         bidderRepository.save(firstBidder);
         bidderRepository.save(secondBidder);

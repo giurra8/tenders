@@ -50,6 +50,7 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
+    // automatically reject all other competing offers once one is accepted
     public Offer acceptOffer(String id) {
         Offer offer = offerRepository.findById(id).orElseThrow(ResourceNotFoundException::new);
         offer.setStatus(OfferStatus.ACCEPTED);
@@ -59,13 +60,14 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
-    public void rejectOffer(String id) {
+    public Offer rejectOffer(String id) {
         Offer offer = offerRepository.findById(id).orElseThrow(ResourceNotFoundException::new);
         if (offer.getStatus().equals(OfferStatus.ACCEPTED)) {
             throw new HttpClientErrorException(HttpStatus.FORBIDDEN, "Once an offer is accepted it can no longer be rejected");
         }
         offer.setStatus(OfferStatus.REJECTED);
         offerRepository.save(offer);
+        return offer;
     }
 
     @Override
@@ -73,7 +75,7 @@ public class OfferServiceImpl implements OfferService {
         List<Offer> offers = getAllOffersForTender(tenderId).stream()
                 .filter(offer -> offer.getStatus().equals(OfferStatus.PENDING))
                 .collect(Collectors.toList());
-        // optional; just to make sure all existing offers are explicitly rejected
+        // optionally fetch all WITHDRAWN offers as well; just to make sure all existing offers are explicitly rejected
         offers.forEach(offer -> offer.setStatus(OfferStatus.REJECTED));
         offerRepository.saveAll(offers);
     }

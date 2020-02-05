@@ -6,6 +6,10 @@ import java.util.List;
 
 public interface BidderService {
 
+    /**
+     * Returns all existing bidders
+     * @return existing bidders
+     */
     List<Bidder> getAllBidders();
 
 }
