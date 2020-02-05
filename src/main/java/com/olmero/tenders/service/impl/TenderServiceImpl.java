@@ -19,11 +19,6 @@ public class TenderServiceImpl implements TenderService {
     }
 
     @Override
-    public void createTender(Tender tender) {
-        repository.save(tender);
-    }
-
-    @Override
     public List<Tender> getAllTenders() {
         return repository.findAll();
     }

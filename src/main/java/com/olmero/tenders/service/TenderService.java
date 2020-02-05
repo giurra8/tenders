@@ -7,8 +7,6 @@ import java.util.List;
 
 public interface TenderService {
 
-    void createTender(Tender tender);
-
     List<Tender> getAllTenders();
 
     List<Tender> getAllTendersFromIssuer(String id);

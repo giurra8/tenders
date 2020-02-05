@@ -1,6 +1,5 @@
 package com.olmero.tenders.controller;
 
-import com.olmero.tenders.error.ApiError;
 import com.olmero.tenders.model.tender.Offer;
 import com.olmero.tenders.service.OfferService;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -43,8 +42,13 @@ public class OfferController {
     }
 
     @RequestMapping(value = "/accept/{id}", method = RequestMethod.POST)
-    public Offer acceptOffer(@PathVariable("id") String id) throws ApiError {
+    public Offer acceptOffer(@PathVariable("id") String id) {
         return service.acceptOffer(id);
+    }
+
+    @RequestMapping(value = "/reject/{id}", method = RequestMethod.POST)
+    public void rejectOffer(@PathVariable("id") String id) {
+        service.rejectOffer(id);
     }
 
 }
