@@ -6,6 +6,10 @@ import java.util.List;
 
 public interface IssuerService {
 
+    /**
+     * Returns all existing issuers
+     * @return existing issuers
+     */
     List<Issuer> getAllIssuers();
 
 }
