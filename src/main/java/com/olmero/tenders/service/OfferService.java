@@ -1,8 +1,6 @@
 package com.olmero.tenders.service;
 
-import com.olmero.tenders.error.ApiError;
 import com.olmero.tenders.model.tender.Offer;
-import com.olmero.tenders.model.tender.Tender;
 
 import java.util.List;
 
@@ -16,12 +14,10 @@ public interface OfferService {
 
     List<Offer> getAllOffersFromBidderForTender(String bidderId, String tenderId);
 
-    void createOffer(Tender tender);
-
-    Offer acceptOffer(String id) throws ApiError;
+    Offer acceptOffer(String id);
 
     void rejectOffer(String id);
 
-    void rejectAllOffers();
+    void rejectAllOffers(String tenderId);
 
 }

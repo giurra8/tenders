@@ -1,15 +1,13 @@
 package com.olmero.tenders.service.impl;
 
-import com.olmero.tenders.error.ApiError;
 import com.olmero.tenders.model.tender.Offer;
-import com.olmero.tenders.model.tender.Tender;
 import com.olmero.tenders.repository.OfferRepository;
-import com.olmero.tenders.repository.TenderRepository;
 import com.olmero.tenders.service.OfferService;
 import com.olmero.tenders.utils.OfferStatus;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,11 +16,9 @@ import java.util.stream.Collectors;
 public class OfferServiceImpl implements OfferService {
 
     private final OfferRepository offerRepository;
-    private final TenderRepository tenderRepository;
 
-    public OfferServiceImpl(final OfferRepository offerRepository, final TenderRepository tenderRepository) {
+    public OfferServiceImpl(final OfferRepository offerRepository) {
         this.offerRepository = offerRepository;
-        this.tenderRepository = tenderRepository;
     }
 
     @Override
@@ -54,33 +50,30 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
-    public void createOffer(Tender tender) {
-        offerRepository.save(new Offer(tender));
-    }
-
-    @Override
     public Offer acceptOffer(String id) {
-//        Offer offer = offerRepository.findById(id).orElseThrow(ResourceNotFoundException::new);
-//        if (offer.getStatus().equals(OfferStatus.ACCEPTED)) {
-//            throw new ApiError(HttpStatus.FORBIDDEN, "Once an offer is accepted it cannot be rejected.");
-//        }
-//        offer.setStatus(OfferStatus.ACCEPTED);
-//        offerRepository.save(offer);
-//        rejectAllOffers();
-//        return offer;
-        return null;
+        Offer offer = offerRepository.findById(id).orElseThrow(ResourceNotFoundException::new);
+        offer.setStatus(OfferStatus.ACCEPTED);
+        offerRepository.save(offer);
+        rejectAllOffers(offer.getTender().getId());
+        return offer;
     }
 
     @Override
     public void rejectOffer(String id) {
-
+        Offer offer = offerRepository.findById(id).orElseThrow(ResourceNotFoundException::new);
+        if (offer.getStatus().equals(OfferStatus.ACCEPTED)) {
+            throw new HttpClientErrorException(HttpStatus.FORBIDDEN, "Once an offer is accepted it can no longer be rejected");
+        }
+        offer.setStatus(OfferStatus.REJECTED);
+        offerRepository.save(offer);
     }
 
     @Override
-    public void rejectAllOffers() {
-        List<Offer> offers = offerRepository.findAllByStatus(OfferStatus.PENDING);
+    public void rejectAllOffers(String tenderId) {
+        List<Offer> offers = getAllOffersForTender(tenderId).stream()
+                .filter(offer -> offer.getStatus().equals(OfferStatus.PENDING))
+                .collect(Collectors.toList());
         // optional; just to make sure all existing offers are explicitly rejected
-        // offers.addAll(repository.findAllByStatus(OfferStatus.WITHDRAWN));
         offers.forEach(offer -> offer.setStatus(OfferStatus.REJECTED));
         offerRepository.saveAll(offers);
     }
