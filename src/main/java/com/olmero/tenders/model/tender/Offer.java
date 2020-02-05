@@ -13,6 +13,7 @@ import java.time.LocalDate;
 public class Offer {
 
     @Id
+    @Getter
     private String id;
 
     @Getter

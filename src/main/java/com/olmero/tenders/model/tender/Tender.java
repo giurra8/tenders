@@ -1,10 +1,8 @@
 package com.olmero.tenders.model.tender;
 
-import com.olmero.tenders.model.common.Cost;
 import com.olmero.tenders.model.company.Issuer;
 import com.olmero.tenders.utils.TenderStatus;
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
 
@@ -14,6 +12,7 @@ import java.util.List;
 public class Tender {
 
     @Id
+    @Getter
     private String id;
 
     @Getter

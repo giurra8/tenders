@@ -31,9 +31,9 @@ public class TenderController {
         service.deleteTender(id);
     }
 
-    @RequestMapping(value = "/issuedBy/{title}", method = RequestMethod.GET)
-    public List<Tender> getAllTendersFromIssuer(@PathVariable("title") String title) {
-        return service.getAllTendersFromIssuer(title);
+    @RequestMapping(value = "/issuedBy/{id}", method = RequestMethod.GET)
+    public List<Tender> getAllTendersFromIssuer(@PathVariable("id") String id) {
+        return service.getAllTendersFromIssuer(id);
     }
 
 }

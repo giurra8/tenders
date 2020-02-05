@@ -3,7 +3,6 @@ package com.olmero.tenders.service.impl;
 import com.olmero.tenders.model.tender.Tender;
 import com.olmero.tenders.repository.TenderRepository;
 import com.olmero.tenders.service.TenderService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -13,8 +12,11 @@ import java.util.stream.Collectors;
 @Service("tenderService")
 public class TenderServiceImpl implements TenderService {
 
-    @Autowired
-    private TenderRepository repository;
+    private final TenderRepository repository;
+
+    public TenderServiceImpl(final TenderRepository repository) {
+        this.repository = repository;
+    }
 
     @Override
     public void createTender(Tender tender) {
@@ -27,9 +29,9 @@ public class TenderServiceImpl implements TenderService {
     }
 
     @Override
-    public List<Tender> getAllTendersFromIssuer(String title) {
+    public List<Tender> getAllTendersFromIssuer(String id) {
         return repository.findAll().stream()
-                .filter(tender -> tender.getIssuer().getTitle().equals(title))
+                .filter(tender -> tender.getIssuer().getId().equals(id))
                 .collect(Collectors.toList());
     }
 
